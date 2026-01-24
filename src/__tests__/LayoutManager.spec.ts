@@ -48,6 +48,27 @@ describe('Layout Manager', () => {
 		expect(win1.posStyle.height).toContain('50 / 100')
 		expect(win2.posStyle.height).toContain('50 / 100')
 	})
+
+	it('should delegate scroll methods to current workspace', () => {
+		const lm = new LayoutManager()
+		const ws = lm.currentWorkspace
+		ws.insertColumnAtEnd(150) // total 150
+
+		lm.scrollTo(20)
+		expect(ws.baseX).toBe(20)
+
+		lm.scrollRight(10)
+		expect(ws.baseX).toBe(30)
+
+		lm.scrollLeft(5)
+		expect(ws.baseX).toBe(25)
+
+		lm.scrollToHead()
+		expect(ws.baseX).toBe(0)
+
+		lm.scrollToTail()
+		expect(ws.baseX).toBe(50) // 150 - 100
+	})
 })
 
 describe('Workspace', () => {
@@ -85,6 +106,46 @@ describe('Workspace', () => {
 		ws.setForceWin(undefined)
 		expect(ws.forceWin).toBeUndefined()
 		expect(ws.forceColumn).toBeUndefined()
+	})
+
+	it('should handle scrolling and horizontal layout', () => {
+		ws.insertColumnAtEnd(40) // 0-40
+		ws.insertColumnAtEnd(40) // 40-80
+		const col3 = ws.insertColumnAtEnd(40) // 80-120
+		const col4 = ws.insertColumnAtEnd(40) // 120-160
+
+		expect(ws.scrollLength).toBe(160)
+
+		// Scroll to head
+		ws.scrollToHead()
+		expect(ws.baseX).toBe(0)
+
+		// Scroll to tail
+		ws.scrollToTail()
+		expect(ws.baseX).toBe(60) // 160 - 100
+
+		// Scroll to fit column 3 (80-120)
+		// When baseX=0, col3 is partially visible (80-100).
+		// scrollToFitColumn should move baseX to at least 120-100 = 20
+		ws.scrollTo(0)
+		ws.scrollToFitColumn(col3)
+		expect(ws.baseX).toBe(20)
+
+		// Scroll to fit column 4 (120-160)
+		ws.scrollToFitColumn(col4)
+		expect(ws.baseX).toBe(60)
+
+		// Scroll back to column 1
+		ws.scrollToFitColumn(ws.columnList[0]!)
+		expect(ws.baseX).toBe(0)
+	})
+
+	it('should clamp scroll position', () => {
+		ws.insertColumnAtEnd(150)
+		ws.scrollTo(-50)
+		expect(ws.baseX).toBe(0)
+		ws.scrollTo(200)
+		expect(ws.baseX).toBe(50) // 150 - 100
 	})
 })
 
@@ -219,5 +280,15 @@ describe('Win', () => {
 		win.destroy()
 		expect(win2.isForce).toBe(true)
 		expect(ws.forceWin).toBe(win2)
+	})
+
+	it('should support fit scrolling', () => {
+		ws.insertColumnAtStart(100)
+		ws.insertColumnAtStart(100)
+		// column sequence: [100, 100, col(from beforeEach)]
+		// col position: 200-250
+
+		win.scrollFit()
+		expect(ws.baseX).toBe(150) // 250 - 100
 	})
 })

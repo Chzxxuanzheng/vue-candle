@@ -79,14 +79,6 @@ export class LayoutManager {
 			ws.baseY = (ws.selfIndex - currentId) * 100
 			let totalWidth = 0
 			for (const col of ws.columnList) {
-				// adjust baseX to ensure forceColumn is always visible
-				if (col === ws.forceColumn) {
-					if (totalWidth < ws.baseX) {
-						ws.baseX = totalWidth
-					} else if (totalWidth + col.width > ws.baseX + 100) {
-						ws.baseX = totalWidth + col.width - 100
-					}
-				}
 				let totalHeight = 0
 				const step = 100 / col.winList.length
 				for (const win of col.winList) {
@@ -102,6 +94,40 @@ export class LayoutManager {
 			}
 		}
 	}
+
+	//#region == Scroll Methods ==
+	scrollToFitColumn(target: Column): LayoutManager {
+		this.currentWorkspace.scrollToFitColumn(target)
+		return this
+	}
+	scrollToFitWin(win: Win): LayoutManager {
+		this.currentWorkspace.scrollToFitColumn(win.column)
+		return this
+	}
+	scrollToForce(): LayoutManager {
+		this.currentWorkspace.scrollToForce()
+		return this
+	}
+	scrollToHead(): LayoutManager {
+		return this.scrollTo(0)
+	}
+	scrollToTail(): LayoutManager {
+		this.currentWorkspace.scrollToTail()
+		return this
+	}
+	scrollTo(pos: number): LayoutManager {
+		this.currentWorkspace.scrollTo(pos)
+		return this
+	}
+	scrollLeft(length: number): LayoutManager {
+		this.currentWorkspace.scrollLeft(length)
+		return this
+	}
+	scrollRight(length: number): LayoutManager {
+		this.currentWorkspace.scrollRight(length)
+		return this
+	}
+	//#endregion
 
 	/**
 	 * create a new Win and add it to the right place at forceColumn

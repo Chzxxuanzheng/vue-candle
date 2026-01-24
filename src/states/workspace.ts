@@ -1,4 +1,4 @@
-import { markRaw, shallowReactive, shallowRef } from 'vue'
+import { computed, markRaw, shallowReactive, shallowRef } from 'vue'
 import { Column } from '@/states/column'
 import type { LayoutManager } from '@/states/layoutManager'
 import type { Win } from './win'
@@ -81,12 +81,76 @@ export class Workspace {
 	}
 	//#endregion
 
+	//#region == Scroll Methods ==
+	scrollToFitColumn(target: Column): Workspace {
+		let totalWidth = 0
+		for (const col of this.columnList) {
+			// adjust baseX to ensure forceColumn is always visible
+			if (col === target) {
+				if (totalWidth < this.baseX) {
+					this.baseX = totalWidth
+				} else if (totalWidth + col.width > this.baseX + 100) {
+					this.baseX = totalWidth + col.width - 100
+				}
+				break
+			}
+			totalWidth += col.width
+		}
+		return this
+	}
+	scrollToFitWin(win: Win): Workspace {
+		return this.scrollToFitColumn(win.column)
+	}
+	scrollToForce(): Workspace {
+		if (this.forceColumn) {
+			this.scrollToFitColumn(this.forceColumn)
+		}
+		return this
+	}
+	scrollToHead(): Workspace {
+		return this.scrollTo(0)
+	}
+	scrollToTail(): Workspace {
+		return this.scrollTo(this.scrollLength - 100)
+	}
+	scrollTo(pos: number): Workspace {
+		if (pos < 0) pos = 0
+		if (pos > this.scrollLength - 100) pos = this.scrollLength - 100
+		this._baseX.value = pos
+		return this
+	}
+	scrollLeft(length: number): Workspace {
+		this.scrollTo(this.scrollPos - length)
+		return this
+	}
+	scrollRight(length: number): Workspace {
+		this.scrollTo(this.scrollPos + length)
+		return this
+	}
+
+	get scrollPos(): number {
+		return this._baseX.value
+	}
+
+	private _scrollLength = computed(() => {
+		let totalWidth = 0
+		for (const col of this.columnList) {
+			totalWidth += col.width
+		}
+		return totalWidth
+	})
+	get scrollLength(): number {
+		return this._scrollLength.value
+	}
+	//#endregion
+
 	/**
 	 * set the focused win and its column
 	 * @param win
 	 */
-	setForceWin(win: Win | undefined) {
+	setForceWin(win: Win | undefined): Workspace {
 		this._forceWin.value = win
 		this._forceColumn.value = win?.column
+		return this
 	}
 }

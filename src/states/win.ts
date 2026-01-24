@@ -206,4 +206,9 @@ export class Win {
 		this.workspace.setForceWin(this)
 		return this
 	}
+
+	scrollFit(): Win {
+		this.workspace.scrollToFitWin(this)
+		return this
+	}
 }
