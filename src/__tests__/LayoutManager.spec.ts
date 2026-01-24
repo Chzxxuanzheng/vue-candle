@@ -69,6 +69,26 @@ describe('Layout Manager', () => {
 		lm.scrollToTail()
 		expect(ws.baseX).toBe(50) // 150 - 100
 	})
+
+	it('should switch workspace by index', () => {
+		const lm = new LayoutManager()
+		const ws1 = lm.workspaceList[1]!
+		lm.switchToWorkspace(1)
+		expect(lm.currentWorkspace).toBe(ws1)
+	})
+
+	it('should switch workspace by object', () => {
+		const lm = new LayoutManager()
+		const ws2 = lm.workspaceList[2]!
+		lm.switchToWorkspace(ws2)
+		expect(lm.currentWorkspace).toBe(ws2)
+	})
+
+	it('should throw when switching to out of range index', () => {
+		const lm = new LayoutManager()
+		expect(() => lm.switchToWorkspace(10)).toThrow('workspace index out of range')
+		expect(() => lm.switchToWorkspace(-1)).toThrow('workspace index out of range')
+	})
 })
 
 describe('Workspace', () => {
@@ -146,6 +166,12 @@ describe('Workspace', () => {
 		expect(ws.baseX).toBe(0)
 		ws.scrollTo(200)
 		expect(ws.baseX).toBe(50) // 150 - 100
+	})
+
+	it('should switch to itself', () => {
+		const ws1 = lm.workspaceList[1]!
+		ws1.switchToSelf()
+		expect(lm.currentWorkspace).toBe(ws1)
 	})
 })
 

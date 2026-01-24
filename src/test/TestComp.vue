@@ -20,6 +20,8 @@
 		<button @click="win.workspace.scrollToHead()">Scroll To Head</button>
 		<button @click="win.workspace.scrollToTail()">Scroll To Tail</button>
 		<button @click="win.workspace.scrollToForce()">Back To Force</button>
+		<button @click="win.lm.switchToWorkspace(0)">To 1 Workspace</button>
+		<button @click="win.lm.switchToWorkspace(1)">To 2 Workspace</button>
 	</div>
 </template>
 

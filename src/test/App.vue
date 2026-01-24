@@ -11,8 +11,12 @@ import TestComp from './TestComp.vue'
 const lm = new LayoutManager()
 lm.addWin(TestComp)
 	.insertWinAtBelow(TestComp)
-	.insertWinAtRight(TestComp, 30)
-	.insertWinAtRight(TestComp, 30)
+	.insertWinAtRight(TestComp)
+	.insertWinAtRight(TestComp)
+
+lm.switchToWorkspace(1)
+  .addWin(TestComp)
+  .insertWinAtBelow(TestComp)
 </script>
 
 <style>

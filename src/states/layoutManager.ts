@@ -95,6 +95,23 @@ export class LayoutManager {
 		}
 	}
 
+	//#region == workspace Methods ==
+  switchToWorkspace(index: number): this
+  switchToWorkspace(workspace: Workspace): this
+  switchToWorkspace(arg: number | Workspace): this {
+    let workspace: Workspace
+    if (typeof(arg) === 'number') {
+      if (arg < 0 || arg >= this.workspaceList.length)
+        throw new Error('workspace index out of range')
+      workspace = this.workspaceList[arg]!
+    } else {
+      workspace = arg
+    }
+    this._currentWorkspace.value = workspace
+    return this
+  }
+  //#endregion
+
 	//#region == Scroll Methods ==
 	scrollToFitColumn(target: Column): this {
 		this.currentWorkspace.scrollToFitColumn(target)

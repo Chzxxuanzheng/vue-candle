@@ -6,11 +6,11 @@ import type { Win } from './win'
 export class Workspace {
 	readonly lm: LayoutManager
 	readonly selfIndex: number
-	private _columnList: Column[] = shallowReactive<Column[]>([])
-	private _forceWin = shallowRef<Win | undefined>(undefined)
-	private _forceColumn = shallowRef<Column | undefined>(undefined)
-	private _baseX = shallowRef(0)
-	private _baseY = shallowRef(0)
+	private readonly _columnList: Column[] = shallowReactive<Column[]>([])
+	private readonly _forceWin = shallowRef<Win | undefined>(undefined)
+	private readonly _forceColumn = shallowRef<Column | undefined>(undefined)
+	private readonly _baseX = shallowRef(0)
+	private readonly _baseY = shallowRef(0)
 
 	constructor(lm: LayoutManager, selfIndex: number) {
 		this.lm = lm
@@ -82,7 +82,7 @@ export class Workspace {
 	//#endregion
 
 	//#region == Scroll Methods ==
-	scrollToFitColumn(target: Column): Workspace {
+	scrollToFitColumn(target: Column): this {
 		let totalWidth = 0
 		for (const col of this.columnList) {
 			// adjust baseX to ensure forceColumn is always visible
@@ -98,32 +98,32 @@ export class Workspace {
 		}
 		return this
 	}
-	scrollToFitWin(win: Win): Workspace {
+	scrollToFitWin(win: Win): this {
 		return this.scrollToFitColumn(win.column)
 	}
-	scrollToForce(): Workspace {
+	scrollToForce(): this {
 		if (this.forceColumn) {
 			this.scrollToFitColumn(this.forceColumn)
 		}
 		return this
 	}
-	scrollToHead(): Workspace {
+	scrollToHead(): this {
 		return this.scrollTo(0)
 	}
-	scrollToTail(): Workspace {
+	scrollToTail(): this {
 		return this.scrollTo(this.scrollLength - 100)
 	}
-	scrollTo(pos: number): Workspace {
+	scrollTo(pos: number): this {
 		if (pos < 0) pos = 0
 		if (pos > this.scrollLength - 100) pos = this.scrollLength - 100
 		this._baseX.value = pos
 		return this
 	}
-	scrollLeft(length: number): Workspace {
+	scrollLeft(length: number): this {
 		this.scrollTo(this.scrollPos - length)
 		return this
 	}
-	scrollRight(length: number): Workspace {
+	scrollRight(length: number): this {
 		this.scrollTo(this.scrollPos + length)
 		return this
 	}
@@ -132,7 +132,7 @@ export class Workspace {
 		return this._baseX.value
 	}
 
-	private _scrollLength = computed(() => {
+	private readonly _scrollLength = computed(() => {
 		let totalWidth = 0
 		for (const col of this.columnList) {
 			totalWidth += col.width
@@ -148,9 +148,14 @@ export class Workspace {
 	 * set the focused win and its column
 	 * @param win
 	 */
-	setForceWin(win: Win | undefined): Workspace {
+	setForceWin(win: Win | undefined): this {
 		this._forceWin.value = win
 		this._forceColumn.value = win?.column
 		return this
 	}
+
+  switchToSelf(): this {
+    this.lm.switchToWorkspace(this)
+    return this
+  }
 }
