@@ -11,10 +11,10 @@ export class Win {
 	readonly content: Component
 	readonly lm: LayoutManager
 	readonly key = crypto.randomUUID()
-	private _column: ShallowRef<Column>
-	private _workspace = computed(() => this.column.workspace)
-	private _isForce = computed(() => this.lm.forceWin === this)
-	private pos: PosInfo = reactive({
+	private readonly _column: ShallowRef<Column>
+	private readonly _workspace = computed(() => this.column.workspace)
+	private readonly _isForce = computed(() => this.lm.forceWin === this)
+	private readonly pos: PosInfo = reactive({
 		width: 0,
 		height: 0,
 		x: 0,
@@ -184,7 +184,7 @@ export class Win {
 		this.pos.y = pos.y
 	}
 
-	private _posStyle = computed(() => {
+	private readonly _posStyle = computed(() => {
 		const sizeInfo = this.lm.sizeInfo
 		return {
 			width: `calc((100% - ${sizeInfo.paddingLeft + sizeInfo.paddingRight}px) * ${this.pos.width} / 100)`,
@@ -202,12 +202,12 @@ export class Win {
 	/**
 	 * set the focused win and its column
 	 */
-	setAsForceWin(): Win {
+	setAsForceWin(): this {
 		this.workspace.setForceWin(this)
 		return this
 	}
 
-	scrollFit(): Win {
+	scrollFit(): this {
 		this.workspace.scrollToFitWin(this)
 		return this
 	}

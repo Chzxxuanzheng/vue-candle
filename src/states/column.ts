@@ -5,9 +5,9 @@ import type { Workspace } from '@/states/workspace'
 
 export class Column {
 	readonly lm: LayoutManager
-	private _workspace: ShallowRef<Workspace>
-	private _winList: Win[] = shallowReactive<Win[]>([])
-	private _width: ShallowRef<number>
+	private readonly _workspace: ShallowRef<Workspace>
+	private readonly _winList: Win[] = shallowReactive<Win[]>([])
+	private readonly _width: ShallowRef<number>
 
 	constructor(width: number, workspace: Workspace, lm: LayoutManager) {
 		this._width = shallowRef(width)

@@ -13,11 +13,11 @@ import type { SizeInfo } from '@/type'
 
 export class LayoutManager {
 	DEFAULT_COLUMN_WIDTH = 50
-	private _forceWin = computed(() => this.currentWorkspace.forceWin)
-	private _forceColumn = computed(() => this.currentWorkspace.forceColumn)
-	private _currentWorkspace: ShallowRef<Workspace>
+	private readonly _forceWin = computed(() => this.currentWorkspace.forceWin)
+	private readonly _forceColumn = computed(() => this.currentWorkspace.forceColumn)
+	private readonly _currentWorkspace: ShallowRef<Workspace>
 	workspaceList: Workspace[] = shallowReactive<Workspace[]>([])
-	private _sizeInfo: SizeInfo = shallowReactive({
+	private readonly _sizeInfo: SizeInfo = shallowReactive({
 		width: 0,
 		height: 0,
 		paddingTop: 0,
@@ -57,7 +57,7 @@ export class LayoutManager {
 		return this._sizeInfo
 	}
 
-	private _winList = computed(() => {
+	private readonly _winList = computed(() => {
 		const out: Win[] = []
 		for (const ws of this.workspaceList) {
 			for (const col of ws.columnList) {
@@ -96,34 +96,34 @@ export class LayoutManager {
 	}
 
 	//#region == Scroll Methods ==
-	scrollToFitColumn(target: Column): LayoutManager {
+	scrollToFitColumn(target: Column): this {
 		this.currentWorkspace.scrollToFitColumn(target)
 		return this
 	}
-	scrollToFitWin(win: Win): LayoutManager {
+	scrollToFitWin(win: Win): this {
 		this.currentWorkspace.scrollToFitColumn(win.column)
 		return this
 	}
-	scrollToForce(): LayoutManager {
+	scrollToForce(): this {
 		this.currentWorkspace.scrollToForce()
 		return this
 	}
-	scrollToHead(): LayoutManager {
+	scrollToHead(): this {
 		return this.scrollTo(0)
 	}
-	scrollToTail(): LayoutManager {
+	scrollToTail(): this {
 		this.currentWorkspace.scrollToTail()
 		return this
 	}
-	scrollTo(pos: number): LayoutManager {
+	scrollTo(pos: number): this {
 		this.currentWorkspace.scrollTo(pos)
 		return this
 	}
-	scrollLeft(length: number): LayoutManager {
+	scrollLeft(length: number): this {
 		this.currentWorkspace.scrollLeft(length)
 		return this
 	}
-	scrollRight(length: number): LayoutManager {
+	scrollRight(length: number): this {
 		this.currentWorkspace.scrollRight(length)
 		return this
 	}
